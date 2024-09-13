@@ -29,35 +29,25 @@
                                     <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
                                     <li class="breadcrumb-item active">Products</li>
                                 </ol>
-                                <div class="mt-5">
+                                <div class="container mt-5">
                                     <div class="row">
-                                        <div class="col-md-6 col-12 mx-auto">
-                                            <h3>Create a user</h3>
-                                            <hr>
-                                            <form:form method="POST" action="/admin/user/create"
-                                                modelAttribute="newUser">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Email</label>
-                                                    <form:input type="email" class="form-control" path="email" />
+                                        <div class="col-12 mx-auto">
+                                            <div class="d-flex justify-content-between">
+                                                <h3>User Detail with id = ${id}</h3>
+                                            </div>
+                                            <hr />
+                                            <div class="card" style="width: 70%;">
+                                                <div class="card-header">
+                                                    User information
                                                 </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Password</label>
-                                                    <form:input type="password" class="form-control" path="password" />
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Phone Number</label>
-                                                    <form:input type="text" class="form-control" path="phone" />
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Full Name</label>
-                                                    <form:input type="text" class="form-control" path="fullName" />
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Address</label>
-                                                    <form:input type="text" class="form-control" path="address" />
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Create</button>
-                                            </form:form>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">ID: ${user.id}</li>
+                                                    <li class="list-group-item">Email: ${user.email}</li>
+                                                    <li class="list-group-item">FullName: ${user.fullName}</li>
+                                                    <li class="list-group-item">Address: ${user.address}</li>
+                                                </ul>
+                                            </div>
+                                            <a href="/admin/user" class="btn btn-primary mt-3">Back</a>
                                         </div>
                                     </div>
                                 </div>
