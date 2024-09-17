@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,24 +22,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.servlet.ServletContext;
-
 @Controller
 public class UserController {
 
-    private UserService userService;
-    private UploadService uploadService;
+    private final UserService userService;
+    private final UploadService uploadService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UploadService uploadService) {
+    public UserController(UserService userService, UploadService uploadService,
+            PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.uploadService = uploadService;
-    }
-
-    // Home
-    @RequestMapping("/")
-    public String getHomePage(Model model) {
-        model.addAttribute("manh", "Tôi là Hà Đình Mạnh");
-        return "hello";
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Bảng thông tin user
@@ -69,8 +65,13 @@ public class UserController {
     public String createUserPage(Model model,
             @ModelAttribute("newUser") User manh,
             @RequestParam("hamanh") MultipartFile file) {
-        // this.userService.handleSaveUser(manh);
+
         String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
+        String hashPassword = this.passwordEncoder.encode(manh.getPassword());
+        manh.setAvatar(avatar);
+        manh.setPassword(hashPassword);
+        manh.setRole(this.userService.getRoleByName(manh.getRole().getName()));
+        this.userService.handleSaveUser(manh);
         return "redirect:/admin/user";
     }
 
