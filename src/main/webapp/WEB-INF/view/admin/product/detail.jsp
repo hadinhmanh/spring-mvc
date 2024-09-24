@@ -24,34 +24,34 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manage User</h1>
+                                <h1 class="mt-4">Manage Product</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">User</li>
+                                    <li class="breadcrumb-item active">Product</li>
                                 </ol>
                                 <div class="container mt-5">
                                     <div class="row">
                                         <div class="col-12 mx-auto">
                                             <div class="d-flex justify-content-between">
-                                                <h3>User Detail with id = ${id}</h3>
+                                                <h3>Product Detail with id = ${id}</h3>
                                             </div>
                                             <hr />
                                             <div class="card" style="width: 70%;">
                                                 <div class="card-header">
-                                                    User information
+                                                    Product information
                                                 </div>
                                                 <ul class="list-group list-group-flush">
-                                                    <li class="list-group-item">ID: ${user.id}</li>
-                                                    <li class="list-group-item">Email: ${user.email}</li>
-                                                    <li class="list-group-item">FullName: ${user.fullName}</li>
-                                                    <li class="list-group-item">Address: ${user.address}</li>
-                                                    <li class="list-group-item">Phone: ${user.phone}</li>
-                                                    <li class="list-group-item">Avatar: </br>
-                                                        <img class="card-img-top" src="/images/avatar/${user.avatar}" />
+                                                    <li class="list-group-item">ID: ${product.id}</li>
+                                                    <li class="list-group-item">Name: ${product.name}</li>
+                                                    <li class="list-group-item">Price: ${product.price}</li>
+                                                    <li class="list-group-item">Quantity: ${product.quantity}</li>
+                                                    <li class="list-group-item">Image: </br>
+                                                        <img class="card-img-top"
+                                                            src="/images/product/${product.image}" />
                                                     </li>
                                                 </ul>
                                             </div>
-                                            <a href="/admin/user" class="btn btn-primary mt-3">Back</a>
+                                            <a href="/admin/product" class="btn btn-primary mt-3">Back</a>
                                         </div>
                                     </div>
                                 </div>

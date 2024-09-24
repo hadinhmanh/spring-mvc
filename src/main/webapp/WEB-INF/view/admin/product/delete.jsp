@@ -10,7 +10,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
                 <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
                 <meta name="author" content="Hỏi Dân IT" />
-                <title>Dashboard</title>
+                <title>Delete</title>
                 <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
             </head>
@@ -24,34 +24,30 @@
                     <div id="layoutSidenav_content">
                         <main>
                             <div class="container-fluid px-4">
-                                <h1 class="mt-4">Manage User</h1>
+                                <h1 class="mt-4">Manage Product</h1>
                                 <ol class="breadcrumb mb-4">
                                     <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">User</li>
+                                    <li class="breadcrumb-item active">Products</li>
                                 </ol>
                                 <div class="container mt-5">
                                     <div class="row">
-                                        <div class="col-12 mx-auto">
+                                        <div class="col-md-6 col-12 mx-auto">
                                             <div class="d-flex justify-content-between">
-                                                <h3>User Detail with id = ${id}</h3>
+                                                <h3>Delete a product with ID = ${id}</h3>
                                             </div>
-                                            <hr />
-                                            <div class="card" style="width: 70%;">
-                                                <div class="card-header">
-                                                    User information
+                                            <hr>
+                                            <div class="alert alert-danger">
+                                                Are you sure to delete this product?
+                                            </div>
+                                            <form:form action="/admin/product/delete" method="POST"
+                                                modelAttribute="Product">
+                                                <div class="mb-3" style="display: none;">
+                                                    <label class="form-label">ID</label>
+                                                    <form:input type="text" value="${id}" class="form-control"
+                                                        path="id" />
                                                 </div>
-                                                <ul class="list-group list-group-flush">
-                                                    <li class="list-group-item">ID: ${user.id}</li>
-                                                    <li class="list-group-item">Email: ${user.email}</li>
-                                                    <li class="list-group-item">FullName: ${user.fullName}</li>
-                                                    <li class="list-group-item">Address: ${user.address}</li>
-                                                    <li class="list-group-item">Phone: ${user.phone}</li>
-                                                    <li class="list-group-item">Avatar: </br>
-                                                        <img class="card-img-top" src="/images/avatar/${user.avatar}" />
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <a href="/admin/user" class="btn btn-primary mt-3">Back</a>
+                                                <button class="btn btn-danger">Confirm</button>
+                                            </form:form>
                                         </div>
                                     </div>
                                 </div>
