@@ -71,9 +71,6 @@
 
                 <jsp:include page="../layout/banner.jsp" />
 
-                <jsp:include page="../layout/feature.jsp" />
-
-
                 <!-- Fruits Shop Start-->
                 <div class="container-fluid fruite py-5">
                     <div class="container py-5">
@@ -102,8 +99,10 @@
                                                     <div class="col-md-6 col-lg-4 col-xl-3">
                                                         <div class="rounded position-relative fruite-item">
                                                             <div class="fruite-img">
-                                                                <img src="/images/product/${product.image}"
-                                                                    class="img-fluid w-100 rounded-top" alt="">
+                                                                <a href="/product/${product.id}"><img
+                                                                        src="/images/product/${product.image}"
+                                                                        class="img-fluid w-100 rounded-top" alt=""></a>
+
                                                             </div>
                                                             <div class="text-white bg-secondary px-3 py-1 rounded position-absolute"
                                                                 style="top: 10px; left: 10px;">Laptop</div>
@@ -140,7 +139,7 @@
                 </div>
                 <!-- Fruits Shop End-->
 
-
+                <jsp:include page="../layout/feature.jsp" />
 
                 <jsp:include page="../layout/footer.jsp" />
 

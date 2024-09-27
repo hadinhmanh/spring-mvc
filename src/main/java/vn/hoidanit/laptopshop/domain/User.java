@@ -34,10 +34,8 @@ public class User {
     @Size(min = 3, message = "Full Name phải có tối thiểu  3 ký tự")
     private String fullName;
 
-    @NotNull
     private String address;
 
-    @NotNull
     private String phone;
     private String avatar;
     @ManyToOne
