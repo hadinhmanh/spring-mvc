@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import vn.hoidanit.laptopshop.domain.Cart;
 import vn.hoidanit.laptopshop.domain.Role;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.domain.dto.RegisterDTO;
+import vn.hoidanit.laptopshop.repository.CartRepository;
 import vn.hoidanit.laptopshop.repository.RoleRepository;
 import vn.hoidanit.laptopshop.repository.UserRepository;
 
@@ -14,10 +16,12 @@ import vn.hoidanit.laptopshop.repository.UserRepository;
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final CartRepository cartRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.cartRepository = cartRepository;
     }
 
     public List<User> getAllUsers() {
@@ -58,5 +62,9 @@ public class UserService {
 
     public User getUserByEmail(String email) {
         return this.userRepository.findByEmail(email);
+    }
+
+    public Cart getCartByUser(User user) {
+        return this.cartRepository.findByUser(user);
     }
 }
