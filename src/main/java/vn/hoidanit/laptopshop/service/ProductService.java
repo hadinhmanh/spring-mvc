@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.boot.autoconfigure.jms.JmsProperties.Listener.Session;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -11,25 +12,34 @@ import java.util.List;
 
 import vn.hoidanit.laptopshop.domain.Cart;
 import vn.hoidanit.laptopshop.domain.CartDetail;
+import vn.hoidanit.laptopshop.domain.Order;
+import vn.hoidanit.laptopshop.domain.OrderDetail;
 import vn.hoidanit.laptopshop.domain.Product;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.repository.CartDetailRepository;
 import vn.hoidanit.laptopshop.repository.CartRepository;
+import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
+import vn.hoidanit.laptopshop.repository.OrderRepository;
 import vn.hoidanit.laptopshop.repository.ProductRepository;
 
-@Controller
+@Service
 public class ProductService {
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
     private final CartDetailRepository cartDetailRepository;
     private final UserService userService;
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     public ProductService(ProductRepository productRepository, CartRepository cartRepository,
-            CartDetailRepository cartDetailRepository, UserService userService) {
+            CartDetailRepository cartDetailRepository, UserService userService,
+            OrderRepository orderRepository, OrderDetailRepository orderDetailRepository) {
         this.productRepository = productRepository;
         this.cartDetailRepository = cartDetailRepository;
         this.cartRepository = cartRepository;
         this.userService = userService;
+        this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     public Product createProduct(Product pr) {
@@ -47,6 +57,10 @@ public class ProductService {
 
     public void deleteProductById(long id) {
         this.productRepository.deleteById(id);
+    }
+
+    public Cart findByUser(User user) {
+        return this.cartRepository.findByUser(user);
     }
 
     public void handleAddProductToCart(String email, long productId, HttpSession session) {
@@ -88,5 +102,77 @@ public class ProductService {
             }
         }
         // lưu Cart_Detail
+    }
+
+    public void handleRemoveCartDetail(long cartDetailId, HttpSession session) {
+        Optional<CartDetail> cartOptional = this.cartDetailRepository.findById(cartDetailId);
+        if (cartOptional.isPresent()) {
+            CartDetail cartDetail = cartOptional.get();
+            Cart cartCurrent = cartDetail.getCart();
+            this.cartDetailRepository.deleteById(cartDetailId);
+            if (cartCurrent.getSum() > 1) {
+                int s = cartCurrent.getSum() - 1;
+                cartCurrent.setSum(s);
+                session.setAttribute("sum", s);
+                this.cartRepository.save(cartCurrent);
+            } else {
+                this.cartRepository.deleteById(cartCurrent.getId());
+                session.setAttribute("sum", 0);
+            }
+        }
+    }
+
+    public void handleUpdateCartBeforeCheckout(List<CartDetail> cartDetails) {
+        for (CartDetail cartDetail : cartDetails) {
+            Optional<CartDetail> cdOptional = this.cartDetailRepository.findById(cartDetail.getId());
+            if (cdOptional.isPresent()) {
+                CartDetail currentCartDetail = cdOptional.get();
+                currentCartDetail.setQuantity(cartDetail.getQuantity());
+                this.cartDetailRepository.save(currentCartDetail);
+            }
+        }
+    }
+
+    public void handlePlaceOrder(User user, HttpSession session,
+            String receiverName, String receiverAddress, String receiverPhone) {
+
+        Cart cart = this.cartRepository.findByUser(user);
+        if (cart != null) {
+            List<CartDetail> cartDetails = cart.getCartDetails();
+
+            if (cartDetails != null) {
+                Order order = new Order();
+                order.setUser(user);
+                order.setReceiverName(receiverName);
+                order.setReceiverAddress(receiverAddress);
+                order.setReceiverPhone(receiverPhone);
+                order.setStatus("PENDING");
+
+                double sum = 0;
+                for (CartDetail cd : cartDetails) {
+                    sum += cd.getPrice();
+                }
+                order.setTotalPrice(sum);
+                // hứng lại order sau khi save để lấy ra được id
+                order = this.orderRepository.save(order);
+
+                for (CartDetail cd : cartDetails) {
+                    OrderDetail orderDetail = new OrderDetail();
+                    orderDetail.setOrder(order);
+                    orderDetail.setProduct(cd.getProduct());
+                    orderDetail.setPrice(cd.getPrice());
+                    orderDetail.setQuantity(cd.getQuantity());
+
+                    this.orderDetailRepository.save(orderDetail);
+                }
+            }
+
+            for (CartDetail cd : cartDetails) {
+                this.cartDetailRepository.deleteById(cd.getId());
+            }
+
+            this.cartRepository.deleteById(cart.getId());
+            session.setAttribute("sum", 0);
+        }
     }
 }
